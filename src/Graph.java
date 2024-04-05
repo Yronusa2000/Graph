@@ -1,6 +1,7 @@
 
 
 import java.util.*;
+import java.util.concurrent.RunnableScheduledFuture;
 
 public class Graph {
     public List<Vertex> vertices;
@@ -32,12 +33,14 @@ public class Graph {
 
         while (!unvisitedVertices.isEmpty()) {
 
-            Vertex currentVertex = unvisitedVertices.stream().min(new Comparator<Vertex>() {
-                @Override
-                public int compare(Vertex o1, Vertex o2) {
-                    return 0;
-                }
-            })
+            // Select the unvisited vertex as the one having the smallest known distance in the hashmap.
+
+            Vertex currentVertex = unvisitedVertices
+                    .stream()
+                    .min(Comparator.comparingDouble(distanceToStartMap::get))
+                    .get();
+
+            if(distanceToStartMap.get(currentVertex).equals(Long.MAX_VALUE)) break;
 
             // Getting all the neighbours of the vertex, that haven't yet been visited.
             List<Vertex> unvisitedNeighbours = currentVertex
@@ -49,11 +52,11 @@ public class Graph {
             // For each of those unvisited neighbours, update the distance if necessary.
             unvisitedNeighbours.forEach(vertex -> {
 
-                int distanceToOrigin = distanceToStartMap.get(vertex) + distanceToStartMap.get(currentVertex);
+                long distanceToOrigin = distanceToStartMap.get(vertex) + distanceToStartMap.get(currentVertex);
                 if (distanceToStartMap.get(vertex) > distanceToOrigin) distanceToStartMap.put(vertex, distanceToOrigin);
             });
 
-            visitedVertices.add(currentVertex);
+            unvisitedVertices.remove(currentVertex);
 
 
         }
