@@ -4,18 +4,17 @@ import java.util.*;
 import java.util.concurrent.RunnableScheduledFuture;
 
 public class Graph {
+
     public List<Vertex> vertices;
 
     public Graph(List<Vertex> vertices) {
         this.vertices = vertices;
     }
 
-    /**
-     *
-     * @param debut the Vertex to
-     * @param end
-     * @return
-     */
+    public int size(){
+        return this.getVertexs().size();
+    }
+
 
     public Path shortestPath(Vertex debut, Vertex end) {
 
