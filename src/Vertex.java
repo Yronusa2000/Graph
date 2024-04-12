@@ -36,15 +36,18 @@ public class Vertex {
     }
 
     /**
-     * The (weighted) arc is oriented from the actual Vertex
+     * The arc is oriented from the actual Vertex
      * to the new one.
      * @param otherVertex The other vertex to which this vertex will be connected.
+     * @return the arc that links the two vertices.
      */
-    public void connect(Vertex otherVertex){
+    public Arc connect(Vertex otherVertex){
         Arc newArc = new Arc(this, otherVertex);
         if(!this.getAccessibleNeighbours().contains(otherVertex)){
             this.getArcsToNeighbours().add(newArc);
         }
+
+        return newArc;
     }
 
 

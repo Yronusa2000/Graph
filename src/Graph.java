@@ -1,7 +1,6 @@
 
 
 import java.util.*;
-import java.util.concurrent.RunnableScheduledFuture;
 
 public class Graph {
 
@@ -12,58 +11,11 @@ public class Graph {
     }
 
     public int size(){
-        return this.getVertexs().size();
+        return this.getVertices().size();
     }
 
 
-    public Path shortestPath(Vertex debut, Vertex end) {
-
-        List<Vertex> unvisitedVertices = this.vertices;
-
-        HashMap<Vertex, Long> distanceToStartMap = new HashMap<>();
-        //Set the distance between the debut Vertex and all other Vertexs
-        this.getVertexs().forEach(Vertex -> {
-            distanceToStartMap.put(Vertex, Long.MAX_VALUE);
-        });
-
-        // Set the distance between origin vertex and itself at 0
-        distanceToStartMap.put(debut, 0L);
-
-
-        while (!unvisitedVertices.isEmpty()) {
-
-            // Select the unvisited vertex as the one having the smallest known distance in the hashmap.
-
-            Vertex currentVertex = unvisitedVertices
-                    .stream()
-                    .min(Comparator.comparingDouble(distanceToStartMap::get))
-                    .get();
-
-            if(distanceToStartMap.get(currentVertex).equals(Long.MAX_VALUE)) break;
-
-            // Getting all the neighbours of the vertex, that haven't yet been visited.
-            List<Vertex> unvisitedNeighbours = currentVertex
-                    .getAccessibleNeighbours()
-                    .stream()
-                    .filter(unvisitedVertices::contains)
-                    .toList();
-
-            // For each of those unvisited neighbours, update the distance if necessary.
-            unvisitedNeighbours.forEach(vertex -> {
-
-                long distanceToOrigin = distanceToStartMap.get(vertex) + distanceToStartMap.get(currentVertex);
-                if (distanceToStartMap.get(vertex) > distanceToOrigin) distanceToStartMap.put(vertex, distanceToOrigin);
-            });
-
-            unvisitedVertices.remove(currentVertex);
-
-
-        }
-
-        return null;
-    }
-
-    public List<Vertex> getVertexs() {
+    public List<Vertex> getVertices() {
         return vertices;
     }
 
@@ -72,11 +24,11 @@ public class Graph {
     }
 
     public int nbLeavingArcs(int vertex){
-        Vertex vertexVertex = this.getVertexs().get(vertex);
+        Vertex vertexVertex = this.getVertices().get(vertex);
         return vertexVertex.getArcsToNeighbours().size();
     }
     public Arc getLeavingArcs(int vertex, int index){
-        return this.getVertexs().get(vertex).getArcsToNeighbours().get(index);
+        return this.getVertices().get(vertex).getArcsToNeighbours().get(index);
     }
 
     public Iterator<Arc> leavingArcs(int vertex){
@@ -91,12 +43,11 @@ public class Graph {
     }
 
     public void print(){
+        System.out.println("printing graph : ");
 
-        List<Arc> visitedArcs = new ArrayList<>();
-        for(Vertex vertex : this.getVertexs()){
+        for(Vertex vertex : this.getVertices()){
             for(Arc arc : vertex.getArcsToNeighbours()){
-                if(!visitedArcs.contains(arc)) arc.print();
-                visitedArcs.add(arc);
+                arc.print();
             }
         }
 
